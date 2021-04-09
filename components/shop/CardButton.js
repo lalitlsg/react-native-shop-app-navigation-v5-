@@ -6,7 +6,7 @@ const CardButton = ({
   children,
   borderLeft = 0,
   borderRight = 0,
-  onViewDetails,
+  onButtonClick,
 }) => {
   return (
     <View
@@ -18,7 +18,7 @@ const CardButton = ({
         borderBottomRightRadius: borderLeft === 1 ? 10 : 0,
       }}
     >
-      <TouchableNativeFeedback onPress={onViewDetails}>
+      <TouchableNativeFeedback onPress={onButtonClick}>
         <View style={styles.cardContainer}>
           <Text style={styles.buttonText}>{children}</Text>
         </View>

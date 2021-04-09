@@ -13,14 +13,16 @@ const ProductItem = ({ itemData, onViewDetails, onAddToCart }) => {
         <Image style={styles.productImage} source={{ uri: imageUrl }} />
       </View>
       <View style={styles.details}>
-        <AppText>{title}</AppText>
+        <AppText style={styles.title}>{title}</AppText>
         <AppChip>${price.toFixed(2)}</AppChip>
       </View>
       <View style={styles.buttonContainer}>
-        <CardButton borderRight={1} onViewDetails={onViewDetails}>
+        <CardButton borderRight={1} onButtonClick={onViewDetails}>
           Details
         </CardButton>
-        <CardButton borderLeft={1}>Add</CardButton>
+        <CardButton borderLeft={1} onButtonClick={onAddToCart}>
+          Add
+        </CardButton>
       </View>
     </View>
   );
@@ -45,6 +47,9 @@ const styles = StyleSheet.create({
     height: "35%",
     alignItems: "center",
     justifyContent: "space-around",
+  },
+  title: {
+    fontSize: 15,
   },
   productImage: {
     width: "100%",

@@ -1,12 +1,19 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 
-const AppText = ({ children }) => {
+const AppText = ({ children, style }) => {
   return (
     <View>
-      <Text>{children}</Text>
+      <Text style={{ ...styles.text, ...style }}>{children}</Text>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  text: {
+    fontFamily: "open-sans-pro",
+    fontSize: 17,
+  },
+});
 
 export default AppText;
