@@ -1,13 +1,15 @@
 import React from "react";
 import { View, StyleSheet, FlatList } from "react-native";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import AppButton from "../../components/AppButton";
 import AppText from "../../components/AppText";
 import SingleCartItem from "../../components/shop/SingleCartItem";
 import Colors from "../../constants/Colors";
+import { addOrder } from "../../store/actions/orders";
 
 const CartScreen = () => {
+  const dispatch = useDispatch();
   const totalAmount = useSelector((state) => state.cart.totalAmount);
   const cartItems = useSelector((state) => {
     const currentCartItems = state.cart.items;
@@ -30,7 +32,13 @@ const CartScreen = () => {
           <AppText>Total: </AppText>
           <AppText>${totalAmount.toFixed(2)}</AppText>
         </View>
-        <AppButton>Order Now</AppButton>
+        <AppButton
+          onPress={() => {
+            dispatch(addOrder(cartItems, totalAmount));
+          }}
+        >
+          Order Now
+        </AppButton>
       </View>
       <View style={styles.cartList}>
         {cartItems.length > 0 ? (

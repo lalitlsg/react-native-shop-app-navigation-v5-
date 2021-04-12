@@ -3,10 +3,10 @@ import { View, Text, TouchableNativeFeedback, StyleSheet } from "react-native";
 import Colors from "../constants/Colors";
 import AppText from "./AppText";
 
-const AppButton = ({ children }) => {
+const AppButton = ({ onPress, children }) => {
   return (
     <View style={styles.buttonContainer}>
-      <TouchableNativeFeedback>
+      <TouchableNativeFeedback onPress={onPress}>
         <View style={styles.appButton}>
           <AppText style={styles.buttonText}>{children}</AppText>
         </View>
