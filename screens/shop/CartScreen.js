@@ -45,7 +45,15 @@ const CartScreen = () => {
           <FlatList
             data={cartItems}
             keyExtractor={(item) => item.productId}
-            renderItem={(itemData) => <SingleCartItem itemData={itemData} />}
+            renderItem={(itemData) => (
+              <SingleCartItem
+                productId={itemData.item.productId}
+                productTitle={itemData.item.productTitle}
+                quantity={itemData.item.quantity}
+                sum={itemData.item.sum}
+                deletable
+              />
+            )}
           />
         ) : (
           <AppText style={styles.cartEmpty}>Cart is empty!</AppText>
