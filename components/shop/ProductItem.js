@@ -3,9 +3,8 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import Colors from "../../constants/Colors";
 import AppChip from "../AppChip";
 import AppText from "../AppText";
-import CardButton from "./CardButton";
 
-const ProductItem = ({ itemData, onViewDetails, onAddToCart }) => {
+const ProductItem = ({ itemData, children }) => {
   const { imageUrl, title, price } = itemData.item;
   return (
     <View style={styles.productContainer}>
@@ -16,14 +15,7 @@ const ProductItem = ({ itemData, onViewDetails, onAddToCart }) => {
         <AppText style={styles.title}>{title}</AppText>
         <AppChip>${price.toFixed(2)}</AppChip>
       </View>
-      <View style={styles.buttonContainer}>
-        <CardButton borderRight={1} onButtonClick={onViewDetails}>
-          Details
-        </CardButton>
-        <CardButton borderLeft={1} onButtonClick={onAddToCart}>
-          Add
-        </CardButton>
-      </View>
+      <View style={styles.buttonContainer}>{children}</View>
     </View>
   );
 };

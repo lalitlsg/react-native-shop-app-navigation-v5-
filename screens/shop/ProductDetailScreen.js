@@ -19,7 +19,7 @@ const ProductDetailScreen = (props) => {
       <Image source={{ uri: selectedProduct.imageUrl }} style={styles.image} />
       <View style={styles.details}>
         <AppButton
-          onButtonClick={() => {
+          onPress={() => {
             dispatch(addToCart(selectedProduct));
           }}
         >

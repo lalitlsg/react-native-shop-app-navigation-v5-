@@ -8,6 +8,7 @@ import ProductsOverviewScreen from "../screens/shop/ProductsOverviewScreen";
 import ProductDetailScreen from "../screens/shop/ProductDetailScreen";
 import CartScreen from "../screens/shop/CartScreen";
 import OrderScreen from "../screens/shop/OrderScreen";
+import UserProductScreen from "../screens/user/UserProductScreen";
 
 const defaultNavOptions = {
   headerTitleStyle: {
@@ -45,9 +46,24 @@ const OrdersNavigator = createStackNavigator(
   }
 );
 
+const UserProductsNavigator = createStackNavigator(
+  {
+    UserProducts: UserProductScreen,
+  },
+  {
+    navigationOptions: {
+      drawerIcon: (drawerConfig) => (
+        <Ionicons name="md-create" size={23} color={drawerConfig.tintColor} />
+      ),
+    },
+    defaultNavigationOptions: defaultNavOptions,
+  }
+);
+
 const ShopNavigator = createDrawerNavigator({
   Products: ProductsNavigator,
   Orders: OrdersNavigator,
+  Admin: UserProductsNavigator,
 });
 
 export default createAppContainer(ShopNavigator);
