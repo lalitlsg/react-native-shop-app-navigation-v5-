@@ -8,18 +8,22 @@ import ProductItem from "../../components/shop/ProductItem";
 import CardButton from "../../components/shop/CardButton";
 import { deleteProduct } from "../../store/actions/product";
 
-const UserProductScreen = () => {
+const UserProductScreen = (props) => {
   const userProducts = useSelector((state) => state.products.userProducts);
   const dispatch = useDispatch();
   return (
     <FlatList
       data={userProducts}
-      renderItem={(itemDate) => (
-        <ProductItem itemData={itemDate}>
+      renderItem={(itemData) => (
+        <ProductItem
+          imageUrl={itemData.item.imageUrl}
+          title={itemData.item.title}
+          price={itemData.item.price}
+        >
           <CardButton
             borderRight={1}
             onButtonClick={() => {
-              props.navigation.navigate("ProductDetail", {
+              props.navigation.navigate("EditProduct", {
                 productId: itemData.item.id,
                 title: itemData.item.title,
               });
@@ -51,6 +55,17 @@ UserProductScreen.navigationOptions = (navDate) => {
           iconName="md-menu"
           onPress={() => {
             navDate.navigation.toggleDrawer();
+          }}
+        />
+      </HeaderButtons>
+    ),
+    headerRight: () => (
+      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+        <Item
+          title="Add"
+          iconName="md-add"
+          onPress={() => {
+            navDate.navigation.navigate("EditProduct");
           }}
         />
       </HeaderButtons>

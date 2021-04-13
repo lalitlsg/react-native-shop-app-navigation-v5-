@@ -17,7 +17,11 @@ const ProductsOverviewScreen = (props) => {
     <FlatList
       data={products}
       renderItem={(itemData) => (
-        <ProductItem itemData={itemData}>
+        <ProductItem
+          imageUrl={itemData.item.imageUrl}
+          title={itemData.item.title}
+          price={itemData.item.price}
+        >
           <CardButton
             borderRight={1}
             onButtonClick={() => {

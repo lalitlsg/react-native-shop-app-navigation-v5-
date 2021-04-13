@@ -4,8 +4,7 @@ import Colors from "../../constants/Colors";
 import AppChip from "../AppChip";
 import AppText from "../AppText";
 
-const ProductItem = ({ itemData, children }) => {
-  const { imageUrl, title, price } = itemData.item;
+const ProductItem = ({ imageUrl, title, price, children }) => {
   return (
     <View style={styles.productContainer}>
       <View style={styles.imageContainer}>
