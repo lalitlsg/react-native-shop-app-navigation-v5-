@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatList } from "react-native";
+import { FlatList, Alert } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
@@ -11,6 +11,18 @@ import { deleteProduct } from "../../store/actions/product";
 const UserProductScreen = (props) => {
   const userProducts = useSelector((state) => state.products.userProducts);
   const dispatch = useDispatch();
+
+  const deleteHandler = (id) => {
+    Alert.alert("Are You Sure?", "Are you sure to delete this item.", [
+      { text: "No", style: "default" },
+      {
+        text: "Yes",
+        style: "destructive",
+        onPress: () => dispatch(deleteProduct(id)),
+      },
+    ]);
+  };
+
   return (
     <FlatList
       data={userProducts}
@@ -33,9 +45,7 @@ const UserProductScreen = (props) => {
           </CardButton>
           <CardButton
             borderLeft={1}
-            onButtonClick={() => {
-              dispatch(deleteProduct(itemData.item.id));
-            }}
+            onButtonClick={() => deleteHandler(itemData.item.id)}
           >
             Delete
           </CardButton>

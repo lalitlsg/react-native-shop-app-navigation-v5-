@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { View, TextInput, ScrollView, StyleSheet } from "react-native";
+import React, { useEffect, useCallback, useReducer } from "react";
+import { View, TextInput, ScrollView, StyleSheet, Alert } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -8,6 +8,31 @@ import CustomHeaderButton from "../../components/CustomHeaderButton";
 import Colors from "../../constants/Colors";
 import { addProduct, editProduct } from "../../store/actions/product";
 
+const FORM_UPDATE = "UPDATE";
+
+const formReducer = (state, action) => {
+  if (action.type === FORM_UPDATE) {
+    const updatedValues = {
+      ...state.inputValues,
+      [action.input]: action.value,
+    };
+    const updatedValidities = {
+      ...state.inputValidities,
+      [action.input]: action.isValid,
+    };
+    let updatedFormIsValid = true;
+    for (const key in updatedValidities) {
+      updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
+    }
+    return {
+      formIsValid: updatedFormIsValid,
+      inputValues: updatedValues,
+      inputValidities: updatedValidities,
+    };
+  }
+  return state;
+};
+
 const EditProductScreen = (props) => {
   const productId = props.navigation.getParam("productId");
   const currentEditProduct = useSelector((state) =>
@@ -15,26 +40,65 @@ const EditProductScreen = (props) => {
   );
   const dispatch = useDispatch();
 
-  const [title, setTitle] = useState(
-    currentEditProduct ? currentEditProduct.title : ""
-  );
-  const [imageUrl, setImageUrl] = useState(
-    currentEditProduct ? currentEditProduct.imageUrl : ""
-  );
-  const [price, setPrice] = useState(
-    currentEditProduct ? currentEditProduct.price : ""
-  );
-  const [description, setDescription] = useState(
-    currentEditProduct ? currentEditProduct.description : ""
-  );
+  // form state management
+  const [formState, formDispatch] = useReducer(formReducer, {
+    inputValues: {
+      title: currentEditProduct ? currentEditProduct.title : "",
+      imageUrl: currentEditProduct ? currentEditProduct.imageUrl : "",
+      price: "",
+      description: currentEditProduct ? currentEditProduct.description : "",
+    },
+    inputValidities: {
+      title: currentEditProduct ? true : false,
+      imageUrl: currentEditProduct ? true : false,
+      price: currentEditProduct ? true : false,
+      description: currentEditProduct ? true : false,
+    },
+    formIsValid: currentEditProduct ? true : false,
+  });
+
+  const inputHandler = (inputId, text) => {
+    let isValid = true;
+    if (text.trim().length === 0) {
+      isValid = false;
+    }
+
+    formDispatch({
+      type: FORM_UPDATE,
+      value: text,
+      isValid: isValid,
+      input: inputId,
+    });
+  };
 
   const submitHandler = useCallback(() => {
-    if (currentEditProduct) {
-      dispatch(editProduct(productId, title, imageUrl, description));
-    } else {
-      dispatch(addProduct(title, imageUrl, +price, description));
+    if (!formState.formIsValid) {
+      Alert.alert("Wrong Input", "Please check the form errors", [
+        { text: "Ok", style: "default" },
+      ]);
+      return;
     }
-  }, [dispatch, productId, title, imageUrl, description, price]);
+    if (currentEditProduct) {
+      dispatch(
+        editProduct(
+          productId,
+          formState.inputValues.title,
+          formState.inputValues.imageUrl,
+          formState.inputValues.description
+        )
+      );
+    } else {
+      dispatch(
+        addProduct(
+          formState.inputValues.title,
+          formState.inputValues.imageUrl,
+          +formState.inputValues.price,
+          formState.inputValues.description
+        )
+      );
+    }
+    props.navigation.goBack();
+  }, [dispatch, productId, formState]);
 
   useEffect(() => {
     props.navigation.setParams({ submit: submitHandler });
@@ -47,35 +111,56 @@ const EditProductScreen = (props) => {
           <AppText>Title</AppText>
           <TextInput
             style={styles.input}
-            value={title}
-            onChangeText={(text) => setTitle(text)}
+            value={formState.inputValues.title}
+            onChangeText={(text) => inputHandler("title", text)}
           />
+          {!formState.inputValidities.title && (
+            <AppText style={styles.errorMessage}>
+              Title should not be empty
+            </AppText>
+          )}
         </View>
         <View style={styles.formControl}>
           <AppText>Image URL</AppText>
           <TextInput
             style={styles.input}
-            value={imageUrl}
-            onChangeText={(imageUrl) => setImageUrl(imageUrl)}
+            value={formState.inputValues.imageUrl}
+            onChangeText={(text) => inputHandler("imageUrl", text)}
           />
+          {!formState.inputValidities.imageUrl && (
+            <AppText style={styles.errorMessage}>
+              ImageUrl should not be empty
+            </AppText>
+          )}
         </View>
         {!currentEditProduct && (
           <View style={styles.formControl}>
             <AppText>Price</AppText>
             <TextInput
               style={styles.input}
-              value={price}
-              onChangeText={(price) => setPrice(price)}
+              value={formState.inputValues.price}
+              keyboardType="number-pad"
+              onChangeText={(text) => inputHandler("price", text)}
             />
+            {!formState.inputValidities.price && (
+              <AppText style={styles.errorMessage}>
+                Price should not be empty
+              </AppText>
+            )}
           </View>
         )}
         <View style={styles.formControl}>
           <AppText>Description</AppText>
           <TextInput
             style={styles.input}
-            value={description}
-            onChangeText={(description) => setDescription(description)}
+            value={formState.inputValues.description}
+            onChangeText={(text) => inputHandler("description", text)}
           />
+          {!formState.inputValidities.description && (
+            <AppText style={styles.errorMessage}>
+              Description should not be empty
+            </AppText>
+          )}
         </View>
       </View>
     </ScrollView>
@@ -111,6 +196,9 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     marginVertical: 5,
     borderRadius: 5,
+  },
+  errorMessage: {
+    color: Colors.errorMessages,
   },
 });
 
