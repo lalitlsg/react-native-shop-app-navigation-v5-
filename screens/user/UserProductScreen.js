@@ -34,7 +34,7 @@ const UserProductScreen = (props) => {
           <CardButton
             borderLeft={1}
             onButtonClick={() => {
-              dispatch(deleteProduct(itemDate.item.id));
+              dispatch(deleteProduct(itemData.item.id));
             }}
           >
             Delete
