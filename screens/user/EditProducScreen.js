@@ -1,11 +1,10 @@
 import React, { useEffect, useCallback, useReducer } from "react";
-import { View, TextInput, ScrollView, StyleSheet, Alert } from "react-native";
+import { View, ScrollView, StyleSheet, Alert } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useSelector, useDispatch } from "react-redux";
+import AppInput from "../../components/AppInput";
 
-import AppText from "../../components/AppText";
 import CustomHeaderButton from "../../components/CustomHeaderButton";
-import Colors from "../../constants/Colors";
 import { addProduct, editProduct } from "../../store/actions/product";
 
 const FORM_UPDATE = "UPDATE";
@@ -57,20 +56,17 @@ const EditProductScreen = (props) => {
     formIsValid: currentEditProduct ? true : false,
   });
 
-  const inputHandler = (inputId, text) => {
-    let isValid = true;
-    if (text.trim().length === 0) {
-      isValid = false;
-    }
-
-    formDispatch({
-      type: FORM_UPDATE,
-      value: text,
-      isValid: isValid,
-      input: inputId,
-    });
-  };
-
+  const inputChangeHandler = useCallback(
+    (inputId, inputValue, inputValidity) => {
+      formDispatch({
+        type: FORM_UPDATE,
+        value: inputValue,
+        isValid: inputValidity,
+        input: inputId,
+      });
+    },
+    [formDispatch]
+  );
   const submitHandler = useCallback(() => {
     if (!formState.formIsValid) {
       Alert.alert("Wrong Input", "Please check the form errors", [
@@ -107,61 +103,49 @@ const EditProductScreen = (props) => {
   return (
     <ScrollView>
       <View style={styles.formContainer}>
-        <View style={styles.formControl}>
-          <AppText>Title</AppText>
-          <TextInput
-            style={styles.input}
-            value={formState.inputValues.title}
-            onChangeText={(text) => inputHandler("title", text)}
-          />
-          {!formState.inputValidities.title && (
-            <AppText style={styles.errorMessage}>
-              Title should not be empty
-            </AppText>
-          )}
-        </View>
-        <View style={styles.formControl}>
-          <AppText>Image URL</AppText>
-          <TextInput
-            style={styles.input}
-            value={formState.inputValues.imageUrl}
-            onChangeText={(text) => inputHandler("imageUrl", text)}
-          />
-          {!formState.inputValidities.imageUrl && (
-            <AppText style={styles.errorMessage}>
-              ImageUrl should not be empty
-            </AppText>
-          )}
-        </View>
+        <AppInput
+          id="title"
+          title="Title"
+          errorText="Title should not be empty"
+          onInputChange={inputChangeHandler}
+          initialValue={currentEditProduct ? currentEditProduct.title : ""}
+          initiallyValid={!!currentEditProduct}
+          required
+        />
+        <AppInput
+          id="imageUrl"
+          title="ImageUrl"
+          errorText="ImageUrl should not be empty"
+          onInputChange={inputChangeHandler}
+          initialValue={currentEditProduct ? currentEditProduct.imageUrl : ""}
+          initiallyValid={!!currentEditProduct}
+          required
+        />
         {!currentEditProduct && (
-          <View style={styles.formControl}>
-            <AppText>Price</AppText>
-            <TextInput
-              style={styles.input}
-              value={formState.inputValues.price}
-              keyboardType="number-pad"
-              onChangeText={(text) => inputHandler("price", text)}
-            />
-            {!formState.inputValidities.price && (
-              <AppText style={styles.errorMessage}>
-                Price should not be empty
-              </AppText>
-            )}
-          </View>
-        )}
-        <View style={styles.formControl}>
-          <AppText>Description</AppText>
-          <TextInput
-            style={styles.input}
-            value={formState.inputValues.description}
-            onChangeText={(text) => inputHandler("description", text)}
+          <AppInput
+            id="price"
+            title="Price"
+            errorText="Price should not be empty"
+            onInputChange={inputChangeHandler}
+            keyboardType="decimal-pad"
+            required
+            min={0.1}
           />
-          {!formState.inputValidities.description && (
-            <AppText style={styles.errorMessage}>
-              Description should not be empty
-            </AppText>
-          )}
-        </View>
+        )}
+        <AppInput
+          id="description"
+          title="Description"
+          errorText="Description should not be empty"
+          onInputChange={inputChangeHandler}
+          multiline
+          numberOfLines={3}
+          initialValue={
+            currentEditProduct ? currentEditProduct.description : ""
+          }
+          initiallyValid={!!currentEditProduct}
+          required
+          minLength={5}
+        />
       </View>
     </ScrollView>
   );
@@ -184,21 +168,6 @@ EditProductScreen.navigationOptions = (navData) => {
 const styles = StyleSheet.create({
   formContainer: {
     margin: 20,
-  },
-  formControl: {
-    marginVertical: 5,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: Colors.inputBorder,
-    fontSize: 15,
-    paddingHorizontal: 5,
-    paddingVertical: 2,
-    marginVertical: 5,
-    borderRadius: 5,
-  },
-  errorMessage: {
-    color: Colors.errorMessages,
   },
 });
 
