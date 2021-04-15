@@ -72,7 +72,7 @@ export const addProduct = (title, imageUrl, price, description) => {
 
 export const editProduct = (productId, title, imageUrl, description) => {
   return async (dispatch) => {
-    await fetch(`${BASE_URL}/products/${productId}.json`, {
+    const response = await fetch(`${BASE_URL}/products/${productId}.jon`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -83,6 +83,10 @@ export const editProduct = (productId, title, imageUrl, description) => {
         description,
       }),
     });
+
+    if (!response.ok) {
+      throw new Error("Something went wrong!");
+    }
 
     dispatch({
       type: EDIT_PRODUCT,
@@ -98,9 +102,13 @@ export const editProduct = (productId, title, imageUrl, description) => {
 
 export const deleteProduct = (productId) => {
   return async (dispatch) => {
-    await fetch(`${BASE_URL}/products/${productId}.json`, {
+    const response = await fetch(`${BASE_URL}/products/${productId}.json`, {
       method: "DELETE",
     });
+
+    if (!response.ok) {
+      throw new Error("Something went wrong");
+    }
 
     dispatch({
       type: DELETE_PRODUCT,
