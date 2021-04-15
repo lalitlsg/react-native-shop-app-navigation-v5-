@@ -71,20 +71,40 @@ export const addProduct = (title, imageUrl, price, description) => {
 };
 
 export const editProduct = (productId, title, imageUrl, description) => {
-  return {
-    type: EDIT_PRODUCT,
-    productId,
-    productDetails: {
-      title,
-      imageUrl,
-      description,
-    },
+  return async (dispatch) => {
+    await fetch(`${BASE_URL}/products/${productId}.json`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title,
+        imageUrl,
+        description,
+      }),
+    });
+
+    dispatch({
+      type: EDIT_PRODUCT,
+      productId,
+      productDetails: {
+        title,
+        imageUrl,
+        description,
+      },
+    });
   };
 };
 
 export const deleteProduct = (productId) => {
-  return {
-    type: DELETE_PRODUCT,
-    productId,
+  return async (dispatch) => {
+    await fetch(`${BASE_URL}/products/${productId}.json`, {
+      method: "DELETE",
+    });
+
+    dispatch({
+      type: DELETE_PRODUCT,
+      productId,
+    });
   };
 };

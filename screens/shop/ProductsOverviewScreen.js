@@ -37,6 +37,16 @@ const ProductsOverviewScreen = (props) => {
   }, [dispatch, setIsLoading, setError]);
 
   useEffect(() => {
+    const wilFocusEvent = props.navigation.addListener(
+      "willFocus",
+      fetchProductHandler
+    );
+    return () => {
+      wilFocusEvent.remove();
+    };
+  }, [fetchProductHandler]);
+
+  useEffect(() => {
     fetchProductHandler();
   }, [dispatch, fetchProductHandler]);
 
