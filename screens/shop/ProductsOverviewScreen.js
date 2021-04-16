@@ -20,6 +20,7 @@ import AppText from "../../components/AppText";
 
 const ProductsOverviewScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState();
   const products = useSelector((state) => state.products.availableProducts);
 
@@ -27,14 +28,14 @@ const ProductsOverviewScreen = (props) => {
 
   const fetchProductHandler = useCallback(async () => {
     setError(null);
-    setIsLoading(true);
+    setIsRefreshing(true);
     try {
       await dispatch(fetchProducts());
     } catch (error) {
       setError(error.message);
     }
-    setIsLoading(false);
-  }, [dispatch, setIsLoading, setError]);
+    setIsRefreshing(false);
+  }, [dispatch, setIsRefreshing, setError]);
 
   useEffect(() => {
     const wilFocusEvent = props.navigation.addListener(
@@ -47,7 +48,10 @@ const ProductsOverviewScreen = (props) => {
   }, [fetchProductHandler]);
 
   useEffect(() => {
-    fetchProductHandler();
+    setIsLoading(true);
+    fetchProductHandler().then(() => {
+      setIsLoading(false);
+    });
   }, [dispatch, fetchProductHandler]);
 
   if (isLoading) {
@@ -73,6 +77,8 @@ const ProductsOverviewScreen = (props) => {
 
   return (
     <FlatList
+      onRefresh={fetchProductHandler}
+      refreshing={isRefreshing}
       data={products}
       renderItem={(itemData) => (
         <ProductItem

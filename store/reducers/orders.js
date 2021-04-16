@@ -1,5 +1,5 @@
 import NewOrder from "../../models/NewOrder";
-import { ADD_ORDER } from "../actions/orders";
+import { ADD_ORDER, SET_ORDERS } from "../actions/orders";
 
 const initialState = {
   orders: [],
@@ -7,6 +7,10 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case SET_ORDERS:
+      return {
+        orders: action.orders,
+      };
     case ADD_ORDER:
       const newOrder = new NewOrder(
         action.orderItems.orderId,
