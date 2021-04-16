@@ -3,12 +3,14 @@ import { View, Text, TouchableNativeFeedback, StyleSheet } from "react-native";
 import Colors from "../constants/Colors";
 import AppText from "./AppText";
 
-const AppButton = ({ onPress, children }) => {
+const AppButton = ({ buttonStyle, textStyle, onPress, children }) => {
   return (
     <View style={styles.buttonContainer}>
       <TouchableNativeFeedback onPress={onPress}>
-        <View style={styles.appButton}>
-          <AppText style={styles.buttonText}>{children}</AppText>
+        <View style={{ ...styles.appButton, ...buttonStyle }}>
+          <AppText style={{ ...styles.buttonText, ...textStyle }}>
+            {children}
+          </AppText>
         </View>
       </TouchableNativeFeedback>
     </View>
@@ -26,6 +28,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 3,
     elevation: 2,
+    justifyContent: "center",
+    alignItems: "center",
   },
   buttonText: {
     color: Colors.primary,

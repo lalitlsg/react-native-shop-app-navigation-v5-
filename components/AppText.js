@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: "open-sans-pro",
     fontSize: 17,
+    color: "#000",
   },
 });
 
