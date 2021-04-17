@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
 import AppButton from "../../components/AppButton";
 import AppInput from "../../components/AppInput";
 import Colors from "../../constants/Colors";
-import { signUp } from "../../store/actions/auth";
+import { login, signUp } from "../../store/actions/auth";
 import AppText from "../../components/AppText";
 
 const FORM_UPDATE = "UPDATE";
@@ -136,7 +136,14 @@ const AuthScreen = () => {
               </AppButton>
             ) : (
               <AppButton
-                onPress={() => {}}
+                onPress={() => {
+                  dispatch(
+                    login(
+                      formState.inputValues.email,
+                      formState.inputValues.password
+                    )
+                  );
+                }}
                 buttonStyle={styles.buttonStyle}
                 textStyle={styles.textStyle}
               >
