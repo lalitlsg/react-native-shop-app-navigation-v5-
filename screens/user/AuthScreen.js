@@ -4,6 +4,7 @@ import {
   ScrollView,
   StyleSheet,
   TouchableNativeFeedback,
+  ActivityIndicator,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useDispatch } from "react-redux";
@@ -42,6 +43,8 @@ const formReducer = (state, action) => {
 const AuthScreen = () => {
   const dispatch = useDispatch();
   const [isSignUp, setIsSignUp] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   // form state management
   const [formState, formDispatch] = useReducer(formReducer, {
     inputValues: {
@@ -67,6 +70,30 @@ const AuthScreen = () => {
     [formDispatch]
   );
 
+  const loginHandler = async () => {
+    setError(null);
+    setIsLoading(true);
+    try {
+      await dispatch(
+        login(formState.inputValues.email, formState.inputValues.password)
+      );
+    } catch (error) {}
+    setIsLoading(false);
+  };
+
+  const signupHandler = async () => {
+    setError(null);
+    setIsLoading(true);
+    try {
+      await dispatch(
+        signUp(formState.inputValues.email, formState.inputValues.password)
+      );
+    } catch (error) {
+      setError(error.message);
+    }
+    setIsLoading(false);
+  };
+
   return (
     <LinearGradient
       colors={["#fff", "#e5ffe5"]}
@@ -77,12 +104,22 @@ const AuthScreen = () => {
       <View style={styles.formContainer}>
         <ScrollView>
           <View style={styles.formToggler}>
-            <TouchableNativeFeedback onPress={() => setIsSignUp(false)}>
+            <TouchableNativeFeedback
+              onPress={() => {
+                setIsSignUp(false);
+                setError(null);
+              }}
+            >
               <View style={[styles.tabs, !isSignUp && styles.active]}>
                 <AppText style={!isSignUp && styles.activeText}>Login</AppText>
               </View>
             </TouchableNativeFeedback>
-            <TouchableNativeFeedback onPress={() => setIsSignUp(true)}>
+            <TouchableNativeFeedback
+              onPress={() => {
+                setIsSignUp(true);
+                setError(null);
+              }}
+            >
               <View style={[styles.tabs, isSignUp && styles.active]}>
                 <AppText style={isSignUp && styles.activeText}>Sign Up</AppText>
               </View>
@@ -113,14 +150,7 @@ const AuthScreen = () => {
           <View style={styles.buttonContainer}>
             {isSignUp ? (
               <AppButton
-                onPress={() => {
-                  dispatch(
-                    signUp(
-                      formState.inputValues.email,
-                      formState.inputValues.password
-                    )
-                  );
-                }}
+                onPress={signupHandler}
                 buttonStyle={{
                   ...styles.buttonStyle,
                   backgroundColor: Colors.primary,
@@ -132,25 +162,31 @@ const AuthScreen = () => {
                   color: Colors.success,
                 }}
               >
-                Sign Up
+                {isLoading ? (
+                  <ActivityIndicator size="small" color={Colors.success} />
+                ) : (
+                  "Sign Up"
+                )}
               </AppButton>
             ) : (
               <AppButton
-                onPress={() => {
-                  dispatch(
-                    login(
-                      formState.inputValues.email,
-                      formState.inputValues.password
-                    )
-                  );
-                }}
+                onPress={loginHandler}
                 buttonStyle={styles.buttonStyle}
                 textStyle={styles.textStyle}
               >
-                Login
+                {isLoading ? (
+                  <ActivityIndicator size="small" color={Colors.primary} />
+                ) : (
+                  "Login"
+                )}
               </AppButton>
             )}
           </View>
+          {error && (
+            <View style={styles.errorStyles}>
+              <AppText style={styles.errorText}> {error}</AppText>
+            </View>
+          )}
         </ScrollView>
       </View>
     </LinearGradient>
@@ -193,6 +229,17 @@ const styles = StyleSheet.create({
   },
   activeText: {
     color: Colors.success,
+  },
+  errorStyles: {
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: Colors.errorMessages,
+    padding: 5,
+    borderRadius: 3,
+    backgroundColor: "#ffe5e5",
+  },
+  errorText: {
+    color: Colors.errorMessages,
   },
 });
 
