@@ -40,7 +40,7 @@ const formReducer = (state, action) => {
   return state;
 };
 
-const AuthScreen = () => {
+const AuthScreen = (props) => {
   const dispatch = useDispatch();
   const [isSignUp, setIsSignUp] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -77,8 +77,11 @@ const AuthScreen = () => {
       await dispatch(
         login(formState.inputValues.email, formState.inputValues.password)
       );
-    } catch (error) {}
-    setIsLoading(false);
+      props.navigation.navigate("Shop");
+    } catch (error) {
+      setError(error.message);
+      setIsLoading(false);
+    }
   };
 
   const signupHandler = async () => {

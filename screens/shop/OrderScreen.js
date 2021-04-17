@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
-import { FlatList } from "react-native";
+import { FlatList, View, StyleSheet } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import CustomHeaderButton from "../../components/CustomHeaderButton";
 import OrderItem from "../../components/shop/OrderItem";
 import { fetchOrders } from "../../store/actions/orders";
+import AppEmpty from "../../components/AppEmpty";
+import Colors from "../../constants/Colors";
 
 const OrderScreen = () => {
   const orders = useSelector((state) => state.order.orders);
@@ -14,6 +16,16 @@ const OrderScreen = () => {
   useEffect(() => {
     dispatch(fetchOrders());
   }, [dispatch]);
+
+  if (orders.length === 0) {
+    return (
+      <View style={styles.empty}>
+        <AppEmpty image={require("../../assets/images/empty.png")}>
+          No Orders Found!
+        </AppEmpty>
+      </View>
+    );
+  }
 
   return (
     <FlatList
@@ -44,5 +56,13 @@ OrderScreen.navigationOptions = (navDate) => {
     ),
   };
 };
+
+const styles = StyleSheet.create({
+  empty: {
+    flex: 1,
+    backgroundColor: Colors.primary,
+    margin: 10,
+  },
+});
 
 export default OrderScreen;

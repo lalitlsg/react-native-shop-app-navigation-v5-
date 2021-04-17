@@ -1,13 +1,9 @@
 import { LOGIN_URL, SIGNUP_URL } from "../../constants/Url";
-import { API_KEY } from "@env";
 
 export const SIGN_UP = "SIGN_UP";
 export const LOGIN = "LOGIN";
 
 export const login = (email, password) => {
-  console.log(API_KEY);
-  console.log(LOGIN_URL);
-
   return async (dispatch) => {
     const response = await fetch(LOGIN_URL, {
       method: "POST",
@@ -39,6 +35,8 @@ export const login = (email, password) => {
 
     dispatch({
       type: LOGIN,
+      token: resData.idToken,
+      userId: resData.localId,
     });
   };
 };
@@ -58,8 +56,6 @@ export const signUp = (email, password) => {
       }),
     });
 
-    // console.log(response);
-
     if (!response.ok) {
       const errData = await response.json();
       let errorMessage = "Something went wrong";
@@ -70,10 +66,11 @@ export const signUp = (email, password) => {
     }
 
     const resData = await response.json();
-    console.log(resData);
 
     dispatch({
       type: SIGN_UP,
+      token: resData.idToken,
+      userId: resData.localId,
     });
   };
 };

@@ -43,8 +43,10 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   productImage: {
-    width: "100%",
-    height: "100%",
+    width: "95%",
+    height: "95%",
+    resizeMode: "contain",
+    margin: 5,
   },
   buttonContainer: {
     flexDirection: "row",

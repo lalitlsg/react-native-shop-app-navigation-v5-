@@ -3,6 +3,7 @@ import { View, StyleSheet, FlatList, ActivityIndicator } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 import AppButton from "../../components/AppButton";
+import AppEmpty from "../../components/AppEmpty";
 import AppText from "../../components/AppText";
 import SingleCartItem from "../../components/shop/SingleCartItem";
 import Colors from "../../constants/Colors";
@@ -62,7 +63,9 @@ const CartScreen = () => {
             )}
           />
         ) : (
-          <AppText style={styles.cartEmpty}>Cart is empty!</AppText>
+          <AppEmpty image={require("../../assets/images/empty-cart.png")}>
+            Cart Is Empty!
+          </AppEmpty>
         )}
       </View>
     </View>
@@ -89,9 +92,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     padding: 15,
     elevation: 2,
-  },
-  cartEmpty: {
-    textAlign: "center",
   },
 });
 

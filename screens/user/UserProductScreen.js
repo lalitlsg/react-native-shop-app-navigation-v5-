@@ -14,6 +14,7 @@ import ProductItem from "../../components/shop/ProductItem";
 import CardButton from "../../components/shop/CardButton";
 import { deleteProduct } from "../../store/actions/product";
 import Colors from "../../constants/Colors";
+import AppEmpty from "../../components/AppEmpty";
 
 const UserProductScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -51,6 +52,16 @@ const UserProductScreen = (props) => {
     return (
       <View style={styles.loader}>
         <ActivityIndicator size="large" color={Colors.loader} />
+      </View>
+    );
+  }
+
+  if (userProducts.length === 0) {
+    return (
+      <View style={styles.empty}>
+        <AppEmpty image={require("../../assets/images/empty.png")}>
+          No Products Found!
+        </AppEmpty>
       </View>
     );
   }
@@ -120,6 +131,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  empty: {
+    flex: 1,
+    backgroundColor: Colors.primary,
+    margin: 10,
   },
 });
 
