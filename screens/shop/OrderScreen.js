@@ -41,7 +41,7 @@ const OrderScreen = () => {
   );
 };
 
-OrderScreen.navigationOptions = (navDate) => {
+export const ordersScreenOptions = (navDate) => {
   return {
     headerLeft: () => (
       <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>

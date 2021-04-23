@@ -45,7 +45,7 @@ const ProductDetailScreen = (props) => {
   );
 };
 
-ProductDetailScreen.navigationOptions = (navData) => {
+export const productDetailScreenOptions = (navData) => {
   const title = navData.navigation.getParam("title");
   return {
     headerTitle: title,
