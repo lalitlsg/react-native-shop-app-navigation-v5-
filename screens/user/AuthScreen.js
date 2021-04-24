@@ -77,7 +77,6 @@ const AuthScreen = (props) => {
       await dispatch(
         login(formState.inputValues.email, formState.inputValues.password)
       );
-      props.navigation.navigate("Shop");
     } catch (error) {
       setError(error.message);
       setIsLoading(false);

@@ -98,7 +98,7 @@ const UserProductScreen = (props) => {
   );
 };
 
-UserProductScreen.navigationOptions = (navDate) => {
+export const userProductsScreenOptions = (navDate) => {
   return {
     headerTitle: "Your Products",
     headerLeft: () => (

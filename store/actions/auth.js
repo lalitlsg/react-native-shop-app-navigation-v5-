@@ -3,7 +3,14 @@ import { LOGIN_URL, SIGNUP_URL } from "../../constants/Url";
 
 export const AUTHENTICATE = "AUTHENTICATE";
 export const LOGOUT = "LOGOUT";
+export const SET_DID_TRY_AL = "SET_DID_TRY_AL";
 let timer;
+
+export const setDidTryAL = () => {
+  return {
+    type: SET_DID_TRY_AL,
+  };
+};
 
 export const authenticate = (token, userId, expiryTime) => {
   return (dispatch) => {
