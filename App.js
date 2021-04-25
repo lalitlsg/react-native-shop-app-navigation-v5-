@@ -6,6 +6,7 @@ import { useFonts } from "expo-font";
 import AppLoading from "expo-app-loading";
 import { LogBox } from "react-native";
 import ReduxThunk from "redux-thunk";
+import * as Notifications from "expo-notifications";
 
 import productReducer from "./store/reducers/product";
 import cartReducer from "./store/reducers/cart";
@@ -15,6 +16,14 @@ import authReducer from "./store/reducers/auth";
 import AppNavigator from "./navigation/AppNavigator";
 
 LogBox.ignoreAllLogs();
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => {
+    return {
+      shouldShowAlert: true,
+    };
+  },
+});
 
 const rootReducer = combineReducers({
   products: productReducer,

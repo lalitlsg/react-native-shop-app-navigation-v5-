@@ -1,5 +1,7 @@
 import { BASE_URL } from "../../constants/Url";
 import Product from "../../models/Product";
+import * as Notifications from "expo-notifications";
+import * as Permissions from "expo-permissions";
 
 export const ADD_PRODUCT = "ADD_PRODUCT";
 export const EDIT_PRODUCT = "EDIT_PRODUCT";
@@ -22,6 +24,7 @@ export const fetchProducts = () => {
           new Product(
             key,
             resData[key].ownerId,
+            resData[key].ownerPushToken,
             resData[key].title,
             resData[key].imageUrl,
             resData[key].description,
@@ -46,6 +49,17 @@ export const fetchProducts = () => {
 export const addProduct = (title, imageUrl, price, description) => {
   return async (dispatch, getState) => {
     // execute any async code, thanks to redux thunk
+    let pushToken;
+    let statusObj = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+    if (statusObj.status !== "granted") {
+      statusObj = await Permissions.askAsync(Permissions.Notifications);
+    }
+    if (statusObj.status !== "granted") {
+      pushToken = null;
+    } else {
+      pushToken = (await Notifications.getExpoPushTokenAsync()).data;
+    }
+
     const token = getState().auth.token;
     const userId = getState().auth.userId;
     const response = await fetch(`${BASE_URL}/products.json?auth=${token}`, {
@@ -59,6 +73,7 @@ export const addProduct = (title, imageUrl, price, description) => {
         price,
         description,
         ownerId: userId,
+        ownerPushToken: pushToken,
       }),
     });
 
@@ -73,6 +88,7 @@ export const addProduct = (title, imageUrl, price, description) => {
         price,
         description,
         ownerId: userId,
+        ownerPushToken: pushToken,
       },
     });
   };

@@ -22,6 +22,7 @@ export default (state = initialState, action) => {
       const newProduct = new Product(
         action.productDetails.id,
         action.productDetails.ownerId,
+        action.productDetails.ownerPushToken,
         action.productDetails.title,
         action.productDetails.imageUrl,
         action.productDetails.description,
@@ -39,6 +40,7 @@ export default (state = initialState, action) => {
       const editedProduct = new Product(
         action.productId,
         state.availableProducts[availableProductIndex].ownerId,
+        state.availableProducts[availableProductIndex].ownerPushToken,
         action.productDetails.title,
         action.productDetails.imageUrl,
         action.productDetails.description,

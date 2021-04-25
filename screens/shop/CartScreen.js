@@ -23,6 +23,7 @@ const CartScreen = () => {
         productTitle: currentCartItems[key].productTitle,
         quantity: currentCartItems[key].quantity,
         sum: currentCartItems[key].sum,
+        pushToken: currentCartItems[key].pushToken,
       });
     }
     return cartItemsArray.sort((a, b) => (a.productId > b.productId ? 1 : -1));
