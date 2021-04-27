@@ -12,7 +12,10 @@ const ProductItem = ({ imageUrl, title, price, children }) => {
       </View>
       <View style={styles.details}>
         <AppText style={styles.title}>{title}</AppText>
-        <AppChip>${price.toFixed(2)}</AppChip>
+        <AppChip>
+          {"\u20B9"}
+          {price.toFixed(2)}
+        </AppChip>
       </View>
       <View style={styles.buttonContainer}>{children}</View>
     </View>

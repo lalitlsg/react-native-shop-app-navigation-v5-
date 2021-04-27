@@ -25,7 +25,10 @@ const ProductDetailScreen = (props) => {
           />
           <View style={styles.details}>
             <View style={styles.chip}>
-              <AppChip>${selectedProduct.price.toFixed(2)}</AppChip>
+              <AppChip>
+                {"\u20B9"}
+                {selectedProduct.price.toFixed(2)}
+              </AppChip>
             </View>
             <AppText style={styles.description}>
               {selectedProduct.description}

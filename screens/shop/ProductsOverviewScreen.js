@@ -22,6 +22,7 @@ import AppText from "../../components/AppText";
 const ProductsOverviewScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [itemAdded, setItemAdded] = useState(false);
   const [error, setError] = useState();
   const products = useSelector((state) => state.products.availableProducts);
 
@@ -37,6 +38,14 @@ const ProductsOverviewScreen = (props) => {
     }
     setIsRefreshing(false);
   }, [dispatch, setIsRefreshing, setError]);
+
+  const addProductHandler = async (itemData) => {
+    await dispatch(addToCart(itemData));
+    setItemAdded(true);
+    setTimeout(() => {
+      setItemAdded(false);
+    }, 2000);
+  };
 
   useEffect(() => {
     const unsubscribe = props.navigation.addListener(
@@ -77,38 +86,43 @@ const ProductsOverviewScreen = (props) => {
   }
 
   return (
-    <FlatList
-      onRefresh={fetchProductHandler}
-      refreshing={isRefreshing}
-      data={products}
-      renderItem={(itemData) => (
-        <ProductItem
-          imageUrl={itemData.item.imageUrl}
-          title={itemData.item.title}
-          price={itemData.item.price}
-        >
-          <CardButton
-            borderRight={1}
-            onButtonClick={() => {
-              props.navigation.navigate("ProductDetail", {
-                productId: itemData.item.id,
-                title: itemData.item.title,
-              });
-            }}
-          >
-            Details
-          </CardButton>
-          <CardButton
-            borderLeft={1}
-            onButtonClick={() => {
-              dispatch(addToCart(itemData.item));
-            }}
-          >
-            Add
-          </CardButton>
-        </ProductItem>
+    <View>
+      {itemAdded && (
+        <View style={styles.snackbar}>
+          <AppText style={styles.snackbarText}>Item added to the cart</AppText>
+        </View>
       )}
-    />
+      <FlatList
+        onRefresh={fetchProductHandler}
+        refreshing={isRefreshing}
+        data={products}
+        renderItem={(itemData) => (
+          <ProductItem
+            imageUrl={itemData.item.imageUrl}
+            title={itemData.item.title}
+            price={itemData.item.price}
+          >
+            <CardButton
+              borderRight={1}
+              onButtonClick={() => {
+                props.navigation.navigate("ProductDetail", {
+                  productId: itemData.item.id,
+                  title: itemData.item.title,
+                });
+              }}
+            >
+              Details
+            </CardButton>
+            <CardButton
+              borderLeft={1}
+              onButtonClick={() => addProductHandler(itemData.item)}
+            >
+              Add
+            </CardButton>
+          </ProductItem>
+        )}
+      />
+    </View>
   );
 };
 
@@ -141,6 +155,23 @@ export const productOverviewScreenOptions = (navDate) => {
 };
 
 const styles = StyleSheet.create({
+  snackbar: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    zIndex: 1,
+    backgroundColor: "#e5ffe5",
+    width: "95%",
+    margin: 10,
+    borderWidth: 1,
+    borderColor: Colors.success,
+    paddingVertical: 5,
+    borderRadius: 3,
+  },
+  snackbarText: {
+    textAlign: "center",
+    color: Colors.success,
+  },
   loader: {
     flex: 1,
     justifyContent: "center",

@@ -40,7 +40,10 @@ const CartScreen = () => {
       <View style={styles.total}>
         <View style={styles.text}>
           <AppText>Total: </AppText>
-          <AppText>${totalAmount.toFixed(2)}</AppText>
+          <AppText>
+            {"\u20B9"}
+            {totalAmount.toFixed(2)}
+          </AppText>
         </View>
         {isLoading ? (
           <ActivityIndicator size="small" color={Colors.success} />

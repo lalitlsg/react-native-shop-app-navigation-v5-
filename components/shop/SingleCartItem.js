@@ -18,7 +18,10 @@ const SingleCartItem = ({
     <View style={styles.cartItem}>
       <AppText>{quantity}</AppText>
       <AppText>{productTitle}</AppText>
-      <AppText>${sum.toFixed(2)}</AppText>
+      <AppText>
+        {"\u20B9"}
+        {sum.toFixed(2)}
+      </AppText>
       {deletable && (
         <TouchableNativeFeedback
           onPress={() => {

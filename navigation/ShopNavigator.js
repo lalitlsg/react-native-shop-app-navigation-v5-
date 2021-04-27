@@ -23,7 +23,7 @@ import UserProductScreen, {
 import EditProductScreen, {
   editProductScreenOptions,
 } from "../screens/user/EditProductScreen";
-import AuthScreen from "../screens/user/AuthScreen";
+import AuthScreen, { authScreenOptions } from "../screens/user/AuthScreen";
 import StartupScreen from "../screens/StartupScreen";
 import AppButton from "../components/AppButton";
 import Colors from "../constants/Colors";
@@ -157,7 +157,11 @@ const AuthStackNavigator = createStackNavigator();
 export const AuthNavigator = () => {
   return (
     <AuthStackNavigator.Navigator screenOptions={defaultNavOptions}>
-      <AuthStackNavigator.Screen name="Auth" component={AuthScreen} />
+      <AuthStackNavigator.Screen
+        name="Auth"
+        component={AuthScreen}
+        options={authScreenOptions}
+      />
     </AuthStackNavigator.Navigator>
   );
 };

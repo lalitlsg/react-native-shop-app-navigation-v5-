@@ -47,14 +47,17 @@ export default (state = initialState, action) => {
     case REMOVE_FROM_CART:
       const currentCartItems = state.items;
       const selectedProduct = currentCartItems[action.productId];
+      console.log("=>", selectedProduct);
       let updatedCartItems;
       if (selectedProduct.quantity > 1) {
         const updatedCartItem = new CartItem(
           selectedProduct.quantity - 1,
           selectedProduct.productPrice,
           selectedProduct.productTitle,
+          selectedProduct.pushToken,
           selectedProduct.sum - selectedProduct.productPrice
         );
+        console.log("U", updatedCartItem);
         updatedCartItems = {
           ...state.items,
           [action.productId]: updatedCartItem,

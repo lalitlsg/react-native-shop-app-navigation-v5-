@@ -11,7 +11,10 @@ const OrderItem = ({ totalAmount, orderDate, orderItems }) => {
   return (
     <View style={styles.itemContainer}>
       <View style={styles.orderItem}>
-        <AppText>${totalAmount}</AppText>
+        <AppText>
+          {"\u20B9"}
+          {totalAmount}
+        </AppText>
         <AppText>{orderDate}</AppText>
         <TouchableNativeFeedback
           onPress={() => setShowOrderItems((prevState) => !prevState)}
